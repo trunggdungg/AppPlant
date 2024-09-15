@@ -1,7 +1,7 @@
 package eaut.myapp.appplant.model;
 
 public class Cart {
-
+    String id_cart;
     int id_tree;
     String name_tree;
     float price_tree;
@@ -9,6 +9,13 @@ public class Cart {
     int quantity;
 
 
+    public String getId_cart() {
+        return id_cart;
+    }
+
+    public void setId_cart(String id_cart) {
+        this.id_cart = id_cart;
+    }
 
     public Cart() {
     }

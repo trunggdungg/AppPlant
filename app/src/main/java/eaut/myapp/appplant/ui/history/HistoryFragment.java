@@ -1,6 +1,7 @@
 package eaut.myapp.appplant.ui.history;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,10 +41,11 @@ public class HistoryFragment extends Fragment {
         // Set adapter
         orderAdapter = new OrderAdapter(getContext(), orderList);
         recyclerView.setAdapter(orderAdapter);
-
+        // Log when fragment is created
+        Log.d("HistoryFragment", "HistoryFragment is created");
         // Load orders and carts for the current user
         loadOrders();
-//        loadCarts();
+        loadCarts();
 
         return view;
     }
@@ -70,26 +72,33 @@ public class HistoryFragment extends Fragment {
         });
     }
 
-//    private void loadCarts() {
-//        DatabaseReference cartsRef = FirebaseDatabase.getInstance().getReference("cartLíst");
-//        cartsRef.orderByChild("userId").equalTo(Utils.user_current.getId()).addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    private void loadCarts() {
+        System.out.println("cartList: " + cartList);
+        DatabaseReference cartsRef = FirebaseDatabase.getInstance().getReference("cartList");
+        cartsRef.orderByChild("id_user").equalTo(Utils.user_current.getId()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                cartList.clear();
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    Cart cart = snapshot.getValue(Cart.class);
-//                    if (cart != null) {
-//                        cartList.add(cart);
-//                    }
-//                }
-//                orderAdapter.notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                // Handle possible errors
-//            }
-//        });
-//    }
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Cart cart = snapshot.getValue(Cart.class);
+                    if (cart != null) {
+                        cartList.add(cart);
+                        Log.d("CartInfo", "Cart ID: " + cart.getId_tree());
+                        Log.d("CartInfo", "Product Name: " + cart.getName_tree());
+                        Log.d("CartInfo", "Quantity: " + cart.getQuantity());
+                        Log.d("CartInfo", "Price: " + cart.getPrice_tree());
+                        System.out.println("CartInfo" + cartList);
+                    }
+                }
+                orderAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors
+                Log.e("CartInfo", "Database Error: " + databaseError.getMessage());
+            }
+        });
+    }
 }
 
